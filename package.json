@@ -1,0 +1,45 @@
+{
+  "name": "@immutablesoft/form-render",
+  "version": "0.1.0",
+  "description": "FormAlly form render from JSON definition created by form-edit for ReactJS.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImmutableSoft/form-render.git"
+  },
+  "keywords": [
+    "form",
+    "render",
+    "JSON",
+    "definition",
+    "payment",
+    "image",
+    "file",
+    "attachment",
+    "signature",
+    "textarea",
+    "read-only"
+  ],
+  "author": "ImmutableSoft Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ImmutableSoft/form-render/issues"
+  },
+  "homepage": "https://github.com/ImmutableSoft/form-render#readme",
+  "main": "./dist/lib.umd.js",
+  "module": "./dist/lib.module.js",
+  "source": "src/lib.package.js",
+  "peerDependencies": {
+    "react": "0.14 - 18"
+  },
+  "devDependencies": {
+    "microbundle": "^0.15.1"
+  },
+  "dependencies": {
+    "react-signature-canvas": "^1.0.6"
+  },
+  "scripts": {
+    "build": "microbundle --jsx React.createElement --jsxFragment React.Fragment --jsxImportSource react",
+    "build:lib": "microbundle --jsx React.createElement --jsxFragment React.Fragment --jsxImportSource react",
+    "dev": "microbundle watch --jsx React.createElement --jsxFragment React.Fragment --jsxImportSource react"
+  }
+}
