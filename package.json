@@ -1,6 +1,6 @@
 {
   "name": "@immutablesoft/form-render",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "FormAlly form render from JSON definition created by form-edit for ReactJS.",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "files": [
-      "/dist"
+    "/dist"
   ],
   "bugs": {
     "url": "https://github.com/ImmutableSoft/form-render/issues"
@@ -43,6 +43,9 @@
     "microbundle": "^0.15.1"
   },
   "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^1.10.1",
+    "date-fns": "^3.6.0",
+    "react-date-range": "^2.0.1",
     "react-signature-canvas": "^1.0.6"
   },
   "scripts": {

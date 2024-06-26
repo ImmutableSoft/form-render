@@ -1,3 +1,4 @@
+
   // Render Select field
   //  params are { field, style, state }
   const SelectField = ({params}) => {
@@ -47,7 +48,7 @@
                 >
                 {
                   selectValues.map((value) =>
-                    <option value={value}>{value.charAt(0).toUpperCase() + value.slice(1)}</option>
+                    <option value={value} key={value}>{value.charAt(0).toUpperCase() + value.slice(1)}</option>
                   )
                 }
                 </select>
@@ -60,7 +61,7 @@
                 >
                 {
                   selectValues.map((value) =>
-                    <option value={value}>{value.charAt(0).toUpperCase() + value.slice(1)}</option>
+                    <option value={value} key={value}>{value.charAt(0).toUpperCase() + value.slice(1)}</option>
                   )
                 }
                 </select>

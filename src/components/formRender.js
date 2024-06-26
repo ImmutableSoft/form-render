@@ -11,6 +11,8 @@ import StripeField from "./fields/StripeRender";
 import TextAreaField from "./fields/TextAreaRender";
 import TextField from "./fields/TextRender";
 import TimeStampField from "./fields/TimeStampRender";
+import CaptchaField from "./fields/CaptchaRender";
+import DateRangeField from "./fields/DateRangeRender";
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -34,30 +36,33 @@ export function FormRenderToObject(data, endKey)
 export function FormRemoveSeparators(data, endKey)
 {
     var lastKey = "";
+    var newData = new FormData();
 
     data.forEach(function(value, key)
     {
 	    if (key !== endKey)
       {
-//        console.log("key " + key + ", lastKey " + lastKey);
-        // If hidden file input, remove it (data URL already encoded)
-        if (lastKey === key + "File")
-        {
-          data.delete(lastKey)
-        }
+        // If hidden file input, remove it (captcha and file)
+        if (key.includes("captcha-response"))
+          console.log("  skip captcha key " + key);
         else if (lastKey + "File" === key)
+          console.log("  skip file key " + key);
+        else if (lastKey === key + "File")
         {
-          data.delete(key);
+          console.log("  skip file key " + lastKey);
+          newData.delete(lastKey);
         }
+        else
+          newData.append(key, value);
         lastKey = key;
       }
 
       // Otherwise it is a separator, so delete
-      else
-        data.delete(key);
+//      else
+//        data.delete(key);
     });
 
-	return data;
+	return newData;
 }
 
 export function FormRemoveSeparatorsAndHeader(data)
@@ -160,6 +165,12 @@ export const FormRender = ({nameObj, renderFields, handleSubmitFunction,
                 :
                 field.type === 'textarea' ?
                   <TextAreaField params={{field, style, state}} />
+                :
+                field.type === 'captcha' ?
+                  <CaptchaField params={{field, style, state}} />
+                :
+                field.type === 'daterange' ?
+                  <DateRangeField params={{field, style, state}} />
                 :
                 ((field.type === 'number') || field.type.startsWith('date') ||
                  ( field.type === 'tel')) ?

@@ -18,13 +18,13 @@ In the project directory, you can run:
 ### Building the library
 
 ```
-npm build:lib
+npm run build:lib
 ```
 
 Or just:
 
 ```
-npm build
+npm run build
 ```
 
 This builds the library.
@@ -39,8 +39,18 @@ same high level directory, or change the path (../) appropriately.
 npm i file:../form-edit
 ```
 
+To run the component for development, use this command in component
+directory and it will re-build after file save.
+
+```
+npm run dev
+```
+
 
 ### Publishing
+
+Once working and built, publish the component to NPM registery with this
+command.
 
 ```
 npm publish

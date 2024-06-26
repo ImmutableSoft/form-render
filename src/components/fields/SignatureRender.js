@@ -100,7 +100,7 @@ import SignaturePad from "react-signature-canvas";
                       type='url'
                       name={field.name}
                       id={field.name}
-                      value={sigData}
+                      defaultValue={sigData}
                       readOnly
                       hidden
                     />
