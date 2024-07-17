@@ -1,6 +1,6 @@
 {
   "name": "@immutablesoft/form-render",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "FormAlly form render from JSON definition created by form-edit for ReactJS.",
   "repository": {
     "type": "git",

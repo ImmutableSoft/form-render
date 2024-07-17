@@ -38,7 +38,7 @@ import { useState, useEffect } from "react";
       setImageData(field.value);
   }, [field.value, field.min]);
 
-  const handleFileToUrlChange = (e) => { 
+  const handleFileToUrlChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
 

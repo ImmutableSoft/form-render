@@ -13,26 +13,74 @@ import TextField from "./fields/TextRender";
 import TimeStampField from "./fields/TimeStampRender";
 import CaptchaField from "./fields/CaptchaRender";
 import DateRangeField from "./fields/DateRangeRender";
+import QueueField from "./fields/QueueRender";
+import { SourceField, SourceRenderToObject } from "./fields/SourceRender";
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function FormRenderToObject(data, endKey)
+// Transform a rendered form to a single object of name/value pairs
+export function FormRenderToObject(data, endKey, inheritState, initState)
 {
     var object = {};
-    const trimmedForm = FormRemoveSeparators(data, endKey);//{};
+    var sources = [];
+    var source_count = 0;
+    const trimmedForm = FormRemoveSeparators(data, endKey);
+
+//    console.log("initState: " + JSON.stringify(initState));
 
     trimmedForm.forEach(function(value, key)
     {
-      if (value instanceof File)
-        object[key] = (object[key] ? object[key] + ',' : "") + value.name;
+      // The value of the queue is the name, so populate with rendered object
+      //   queue_start is incrementing integer to support nested sources
+      if (key === "formally_source_start")
+      {
+        sources[source_count] = value;
+        source_count++;
+//        console.log(value);
+//        if (initState && initState[value])
+//          console.log("initSourceState: " + JSON.stringify(initState[value]["data"]));
+//        else if (inheritState && inheritState[value])
+//          console.log("inheritSourceState: " + JSON.stringify(inheritState[value]["data"]));
+        object[value] = {};
+        object[value]["data"] = SourceRenderToObject(trimmedForm, value,
+            inheritState && inheritState[value] ? inheritState[value]["data"] : null,
+            initState && initState[value] ? initState[value]["data"] : null);
+//        console.log("After SourceRenderToObject " + JSON.stringify(object[value]["data"]));
+      }
+      else if (source_count > 0)
+      {
+        if (key === "formally_source_end")
+        {
+          source_count--;
+          if (object[sources[source_count]])
+            object[sources[source_count]]["form"] = JSON.parse(value);
+        }
+
+        // Otherwise ignore fields captured in SourceRenderToObject
+      }
+      else if (value instanceof File)
+      {
+        // If inherit/init then this is an edit
+        // Replace the original file name back if not a new file uploaded
+        if (((inheritState != null) || (initState != null)) && (value.name == ""))
+        {
+          if ((inheritState != null) && inheritState[key])
+            object[key] = inheritState[key];
+          else if ((initState != null) && initState[key])
+            object[key] = initState[key];
+        }
+        else
+          object[key] = (object[key] ? object[key] + ',' : "") + value.name;
+      }
       else
         object[key] = value;
     });
 	return object;
 }
 
+// Remove field seperators and other extra fields from a form
 export function FormRemoveSeparators(data, endKey)
 {
     var lastKey = "";
@@ -65,6 +113,7 @@ export function FormRemoveSeparators(data, endKey)
 	return newData;
 }
 
+// Remove formally headers and field seperators from a form
 export function FormRemoveSeparatorsAndHeader(data)
 {
     // Delete the form header fields
@@ -75,6 +124,8 @@ export function FormRemoveSeparatorsAndHeader(data)
     return FormRemoveSeparators(data, "formally_separator_3210");
 }
 
+// Render a form from name and fields definitions
+//   with submit callback, logo, submit string, style and state options
 export const FormRender = ({nameObj, renderFields, handleSubmitFunction,
                             logo, submitString, style, state}) =>
 {
@@ -172,6 +223,12 @@ export const FormRender = ({nameObj, renderFields, handleSubmitFunction,
                 field.type === 'daterange' ?
                   <DateRangeField params={{field, style, state}} />
                 :
+                field.type === 'queue' ?
+                  <QueueField params={{field, style, state}} />
+                :
+                field.type === 'source' ?
+                  <SourceField params={{field, style, state}} />
+                :
                 ((field.type === 'number') || field.type.startsWith('date') ||
                  ( field.type === 'tel')) ?
                   <NumberField params={{field, style, state}} />
@@ -216,3 +273,4 @@ export const FormRenderJsonURI = ({formJsonURI, handleSubmitFunction,
                       submitString={submitString} style={style} />);
 
 }
+
